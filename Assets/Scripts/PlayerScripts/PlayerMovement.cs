@@ -19,14 +19,25 @@ public class PlayerMovement : MonoBehaviour
     [Header("Sound")]
     [SerializeField] AudioClip _jumpSound = null;
 
+    [Header("Scripts")]
+    [SerializeField] PlayerAnimationController _animationController = null;
+
     AudioSource _audioSource;
 
     Vector3 _velocity;
     bool _isGrounded;
+    float _startSpeed;
+    float _maxSpeed;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        _startSpeed = _speed;
+        _maxSpeed = _startSpeed + _sprintBoost;
     }
 
     void Update()
@@ -40,6 +51,34 @@ public class PlayerMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         Vector3 move = transform.right * x + transform.forward * z;
         _controller.Move(move * _speed * Time.deltaTime);
+
+        Debug.Log("X: " + x);
+        Debug.Log("Z: " + z);
+
+        if (_speed == _startSpeed)
+        {
+            if (Mathf.Abs(x) > 0.8 || Mathf.Abs(z) > 0.8)
+            {
+                _animationController.IsWalking(true);
+
+                _animationController.IsStanding(false);
+                _animationController.IsSprinting(false);
+            } 
+            else if (x == 0 && z == 0) 
+            {
+                _animationController.IsStanding(true);
+
+                _animationController.IsWalking(false);
+                _animationController.IsSprinting(false);
+            }
+        }
+        else if (_speed == _maxSpeed)
+        {
+            _animationController.IsSprinting(true);
+
+            _animationController.IsStanding(false);
+            _animationController.IsWalking(false);
+        }
 
         Sprinting();
     }
