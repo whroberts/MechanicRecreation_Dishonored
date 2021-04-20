@@ -52,9 +52,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         _controller.Move(move * _speed * Time.deltaTime);
 
-        Debug.Log("X: " + x);
-        Debug.Log("Z: " + z);
-
         if (_speed == _startSpeed)
         {
             if (Mathf.Abs(x) > 0.8 || Mathf.Abs(z) > 0.8)
