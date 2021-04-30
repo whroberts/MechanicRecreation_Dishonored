@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovementCC : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] CharacterController _controller = null;
@@ -18,9 +18,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Sound")]
     [SerializeField] AudioClip _jumpSound = null;
-
-    [Header("Scripts")]
-    [SerializeField] PlayerAnimationController _animationController = null;
 
     AudioSource _audioSource;
 
@@ -52,32 +49,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * x + transform.forward * z;
         _controller.Move(move * _speed * Time.deltaTime);
 
-        if (_speed == _startSpeed)
-        {
-            if (Mathf.Abs(x) > 0.8 || Mathf.Abs(z) > 0.8)
-            {
-                _animationController.IsWalking(true);
-
-                _animationController.IsStanding(false);
-                _animationController.IsSprinting(false);
-            } 
-            else if (x == 0 && z == 0) 
-            {
-                _animationController.IsStanding(true);
-
-                _animationController.IsWalking(false);
-                _animationController.IsSprinting(false);
-            }
-        }
-        else if (_speed == _maxSpeed)
-        {
-            _animationController.IsSprinting(true);
-
-            _animationController.IsStanding(false);
-            _animationController.IsWalking(false);
-        }
-
-        Sprinting();
     }
     void Gravity()
     {
@@ -98,14 +69,4 @@ public class PlayerMovement : MonoBehaviour
         _controller.Move(_velocity * Time.deltaTime);
     }
 
-    void Sprinting()
-    {
-        if (Input.GetButtonDown("Sprint") && _isGrounded)
-        {
-            _speed += _sprintBoost;
-        } else if (Input.GetButtonUp("Sprint") && _isGrounded)
-        {
-            _speed -= _sprintBoost;
-        }
-    }
 }

@@ -18,12 +18,7 @@ public class PlayerHUD : MonoBehaviour
         _manaBar.value = _playerStats._totalPlayerMana;
     }
 
-    private void Update()
-    {
-        CheckStats();
-    }
-
-    void CheckStats()
+    public void UpdateStats()
     {
         _healthBar.value = _playerStats._currentPlayerHealth;
         _manaBar.value = _playerStats._currentPlayerMana;

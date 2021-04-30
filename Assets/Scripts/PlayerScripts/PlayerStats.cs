@@ -12,17 +12,11 @@ public class PlayerStats : MonoBehaviour
     public int _totalPlayerMana = 100;
     public int _currentPlayerMana = 0;
 
-    [Header("Animation")]
-    [SerializeField] Animator _animator = null;
-
-    [SerializeField] AudioClip _hurtSound = null;
-
-    AudioSource _audioSource;
+    [Header("Script")]
+    [SerializeField] PlayerHUD _hud = null;
 
     private void Awake()
     {
-        _audioSource = GetComponent<AudioSource>();
-
         _currentPlayerHealth = _totalPlayerHealth;
         _currentPlayerMana = _totalPlayerMana;
     }
@@ -30,7 +24,7 @@ public class PlayerStats : MonoBehaviour
     public void DamagePlayer(int damage)
     {
         _currentPlayerHealth -= damage;
-        _audioSource.PlayOneShot(_hurtSound, 0.6f);
+        _hud.UpdateStats();
 
         if (_currentPlayerHealth <= 0)
         {

@@ -4,38 +4,84 @@ using UnityEngine;
 
 public class FarReach : MonoBehaviour
 {
+    [Header("Player")]
+    [SerializeField] GameObject _player = null;
+
     [Header("Ability")]
     [SerializeField] GameObject _landingPad = null;
+    [SerializeField] GameObject _finalPoint = null;
 
-    [SerializeField] LineRenderer _line = null;
+    [Header("Effects")]
+    [SerializeField] ParticleSystem _locationSystem = null;
+    [SerializeField] Light _groundLight = null;
 
-    Vector3[] _positions;
-    float _speed = 1f;
+    float _extendingRate = 0.2f;
+    float _playerRate = 0.1f;
+    float _landingLocationDist;
+    float _playerLerpDist;
 
-    Transform _landingLocation;
-    BoxCollider _landingCollider;
-    Rigidbody _landingRigidbody;
+    Collider _padCollider;
+
+    Vector3 _originalDistance;
+    RaycastHit _hit;
+
+    private void Awake()
+    {
+        _padCollider = _landingPad.GetComponent<Collider>();
+    }
 
     private void Start()
     {
-        _landingLocation = _landingPad.GetComponent<Transform>();
-        _landingCollider = _landingPad.GetComponent<BoxCollider>();
-        _landingRigidbody = _landingPad.GetComponent<Rigidbody>();
-    }
-
-    private void Update()
-    {
-
+        _landingLocationDist = Vector3.Distance(_landingPad.transform.position, _finalPoint.transform.position);
+        _originalDistance = _finalPoint.transform.localPosition;
     }
 
     public void ExtendLandingPosition()
     {
-        _landingRigidbody.MovePosition(_landingLocation.forward);
-        Debug.DrawLine(this.transform.position, _landingLocation.position);
+        float fractionOfJourney = _extendingRate / _landingLocationDist;
+        _landingPad.transform.position = Vector3.Lerp(_landingPad.transform.position, _finalPoint.transform.position, fractionOfJourney);
+
+        _locationSystem.Play();
+        _groundLight.enabled = true;
+        CheckForLOS();
     }
 
-    void Reach()
+    public void ReturnLandingPosition()
     {
-        
+        _landingPad.transform.position = this.transform.position;
+
+        _locationSystem.Stop();
+        _groundLight.enabled = false;
+    }
+
+    public IEnumerator ReachAbility()
+    {
+        //_player.transform.localPosition = _landingPad.transform.position;
+
+        _playerLerpDist = Vector3.Distance(_player.transform.position, _landingPad.transform.position);
+        float fractionJourney = _playerRate / _playerLerpDist;
+        yield return new WaitForSeconds(2f);
+        _player.transform.localPosition = Vector3.Lerp(_player.transform.localPosition, _landingPad.transform.position, fractionJourney);
+        ReturnLandingPosition();
+    }
+
+    void CheckForLOS()
+    {
+        if (Physics.Raycast(_player.transform.position, (_landingPad.transform.position - _player.transform.position), out _hit))
+        {
+
+            Vector3 test = new Vector3(_hit.point.x, _hit.point.y, _hit.point.z - 3);
+            Debug.DrawLine(_player.transform.position, test);
+            Debug.Log(_hit.collider);
+
+            if (_hit.collider.name != "LandingLocation") 
+            {
+                _finalPoint.transform.position = test;
+            } else
+            {
+                //_finalPoint.transform.localPosition = _originalDistance;
+            }
+
+        }
     }
 }
