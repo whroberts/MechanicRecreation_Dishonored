@@ -10,6 +10,9 @@ public class PlayerInputs : MonoBehaviour
 
     PlayerMovementCC _movement;
 
+    float _fireRate = 1f;
+    float _lastShot = 0.0f;
+
     private void Awake()
     {
         _movement = GetComponent<PlayerMovementCC>();
@@ -20,24 +23,27 @@ public class PlayerInputs : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse1))
         {
             _farReach.ExtendLandingPosition();
+            _lastShot = Time.time;
         }
 
         if (Input.GetKeyUp(KeyCode.Mouse1))
         {
-            //StartCoroutine(PlayerPhysics());
-            StartCoroutine(_farReach.ReachAbility());
+            _farReach.ReachAbilityAnimation();
+            _lastShot = Time.time;
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             _farReach.ReturnLandingPosition();
         }
-    }
 
-    IEnumerator PlayerPhysics()
-    {
-        _movement.enabled = false;
-        yield return new WaitForSeconds(2f);
-        //_movement.enabled = true;
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _mouseLook.enabled = false;
+        } 
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _mouseLook.enabled = true;
+        }
     }
 }
