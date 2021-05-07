@@ -18,8 +18,8 @@ TagManager:
   - Ground
   - Enemy
   - PostProcessing
-  - 
-  - 
+  - FarReachInteraction
+  - Effects
   - 
   - 
   - 

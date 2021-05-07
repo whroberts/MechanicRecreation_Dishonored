@@ -32,11 +32,11 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   focusDistance:
-    overrideState: 0
+    overrideState: 1
     value: 10
   aperture:
-    overrideState: 0
-    value: 13.6
+    overrideState: 1
+    value: 32
   focalLength:
     overrideState: 1
     value: 50
@@ -60,8 +60,8 @@ MonoBehaviour:
     overrideState: 1
     value: 1
   shutterAngle:
-    overrideState: 0
-    value: 270
+    overrideState: 1
+    value: 360
   sampleCount:
-    overrideState: 0
-    value: 10
+    overrideState: 1
+    value: 32
